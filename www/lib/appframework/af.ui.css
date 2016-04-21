@@ -527,6 +527,9 @@
 .android .menuButton:after {
   border-color: white;
 }
+.android .settingButton:after {
+  border-color: white;
+}
 .android .af-badge {
   border: none;
 }

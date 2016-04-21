@@ -17,10 +17,19 @@
             <script type="text/javascript" charset="utf-8" src="lib/config.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/fastclick.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/appframework/appframework.ui.min.js"></script>
+	
         
     <script src='cordova.js'></script>
 
+<script>
+        $(document).ready(function(){
+$.afui.updateBadge("#tabStream",'6','tr','green');
+$.afui.updateBadge("#tabChat",'303','tr','green');
+$.afui.updateBadge("#tabContact",'3','tr','green');
+//$.afui.toast("Hello World");
+        });
 
+</script>
 
 </head>
 
@@ -29,14 +38,34 @@
     <div class="view splitview">
         <header>
             <a class="menuButton" data-left-menu="left" data-transition="cover" style="float:left"></a>
-            <h1>Title</h1>
+            <h1>...</h1>
+			<a class='button icon settings' data-right-menu="right" data-transition="push" style="float:right">Right Menu</a>
+
+
+
         </header>
 
         <div class="pages">
 
             <!--Tab View Pages-->
             <div class="panel" data-title="Home" id="tab1" data-selected="true">
-                This is view for first Tab
+                    <ul class="list">
+                        
+                        <li id='aflink'  data-transition="none"><span class='icon target big'></span><h1>...</h1><p>App Framework</p></li>
+                        <li id='afuilink' class='icon picture big' data-transition="none">App Framework UI</li>
+                        <li id='pluginlink' class='icon key big' data-transition="none">App Framework Plugins</li>
+                        <li id='devicelink' class='icon camera big' data-transition="none">Device APIs</li>
+                        
+                        <li class="theme theme-none" href="index.html" data-ignore="true">Auto detect theme</li>
+                        <li class="theme theme-default" href="index.html?default" data-ignore="true">Default theme</li>
+                        <li class="theme theme-ios" href="index.html?ios" data-ignore="true">iOS theme (iOS6 and previous)</li>
+                        <li class="theme theme-ios7" href="index.html?ios7" data-ignore="true">iOS 7 theme</li>
+                        <li class="theme theme-android" href="index.html?android" data-ignore="true">Android dark theme</li>
+                        <li class="theme theme-android-light" href="index.html?android-light" data-ignore="true">Android light theme</li>
+                        <li class="theme theme-win8" href="index.html?win8" data-ignore="true">Windows Phone 8 dark theme</li>
+                        <li class="theme theme-win8-light" href="index.html?win8-light" data-ignore="true">Windows Phone 8 light theme</li>
+                        <li class="theme theme-bb" href="index.html?bb" data-ignore="true">BlackBerry 10 theme</li>                         
+                    </ul>
             </div>
 
             <div class="panel" data-title="Favorites" id="tab2" >
@@ -59,7 +88,7 @@
             </div>
 
         </div>
-                <nav id="left">
+        <nav id="left">
             <div class="view active">
                 <header>
                     <h1>Left</h1>
@@ -69,18 +98,108 @@
                         <ul class="list">
                             <li><a href="#1" onclick="$.afui.clearHistory()">satu</a></li>
                             <li><a href="#2" onclick="$.afui.clearHistory()">dua</a></li>
-                        </ul>
+                        
+						 <li class="divider">UI Themes</li>    
+							<li><a class="theme theme-none" href="index.html" data-ignore="true">Auto detect theme</a></li>
+							<li><a class="theme theme-default" href="index.html?default" data-ignore="true">Default theme</a></li>
+							<li><a class="theme theme-ios" href="index.html?ios" data-ignore="true">iOS theme (iOS6 and previous)</a></li>
+							<li><a class="theme theme-ios7" href="index.html?ios7" data-ignore="true">iOS 7 theme</a></li>
+							<li><a class="theme theme-android" href="index.html?android" data-ignore="true">Android dark theme</a></li>
+							<li><a class="theme theme-android-light" href="index.html?android-light" data-ignore="true">Android light theme</a></li>
+							<li><a class="theme theme-win8" href="index.html?win8" data-ignore="true">Windows Phone 8 dark theme</a></li>
+							<li><a class="theme theme-win8-light" href="index.html?win8-light" data-ignore="true">Windows Phone 8 light theme</a></li>
+							<li><a class="theme theme-bb" href="index.html?bb" data-ignore="true">BlackBerry 10 theme</a></li> 
+						 <li class="divider">Menus</li>
+							<li><a  onclick="$.ui.toggleHeaderMenu();">Toggle Header</a></li>
+							<li><a  onclick="$.ui.toggleSideMenu()">Toggle Sidebar</a></li>
+							<li><a  onclick="$.ui.toggleNavMenu()">Toggle Footer</a></li>
+						 <li class="divider">Kitchen Sink</li>
+							<li><a href="index.html" data-ignore="true">Reset App</a></li>                    
+						</ul>
                     </div>
                 </div>
             </div>
         </nav>
+        <nav id="right">
+            <div class="view active">
+                <header>
+                    <h1>Setting</h1>
+                </header>
+                <div class="pages">
+                    <div class="panel active" id="navPage1" data-title="Foobar">
+                        <ul class="list">
+                        <li class="divider">Icons</li> 
+                        <li><a  class="icon home big">Home</a></li>
+                        <li><a  class="icon pencil big">Pencil</a></li>
+                        <li><a  class="icon picture big">Picture</a></li>
+                        <li><a  class="icon camera big">Camera</a></li>
+                        <li><a  class="icon headset big">Headset</a></li>
+                        <li><a  class="icon paper big">Paper</a></li>
+                        <li><a  class="icon stack big">Stack</a></li>
+                        <li><a  class="icon folder big">Folder</a></li>
+                        <li><a  class="icon tag big">Tag</a></li>
+                        <li><a  class="icon basket big">Basket</a></li>
+                        <li><a  class="icon phone big">Phone</a></li>
+                        <li><a  class="icon mail big">Mail</a></li>
+                        <li><a  class="icon location big">Location</a></li>
+                        <li><a  class="icon clock big">Clock</a></li>
+                        <li><a  class="icon calendar big">Calendar</a></li>
+                        <li><a  class="icon message big">Message</a></li>
+                        <li><a  class="icon chat big">Chat</a></li>
+                        <li><a  class="icon user big">User</a></li>
+                        <li><a  class="icon loading big">Loading</a></li>
+                        <li><a  class="icon refresh big">Refresh</a></li>
+                        <li><a  class="icon magnifier big">Magnifier</a></li>
+                        <li><a  class="icon key big">Key</a></li>
+                        <li><a  class="icon settings big">Settings</a></li>
+                        <li><a  class="icon graph big">Graph</a></li>
+                        <li><a  class="icon trash big">Trash</a></li>
+                        <li><a  class="icon pin big">Pin</a></li>
+                        <li><a  class="icon target big">Target</a></li>
+                        <li><a  class="icon download big">Download</a></li>
+                        <li><a  class="icon upload big">Upload</a></li>
+                        <li><a  class="icon star big">Star</a></li>
+                        <li><a  class="icon heart big">Heart</a></li>
+                        <li><a  class="icon warning big">Warning</a></li>
+                        <li><a  class="icon add big">Add</a></li>
+                        <li><a  class="icon remove big">Remove</a></li>
+                        <li><a  class="icon question big">Question</a></li>
+                        <li><a  class="icon info big">Info</a></li>
+                        <li><a  class="icon error big">Error</a></li>
+                        <li><a  class="icon check big">Check</a></li>
+                        <li><a  class="icon minimize big">Minimize</a></li>
+                        <li><a  class="icon close big">Close</a></li>
+                        <li><a  class="icon up big">Up</a></li>
+                        <li><a  class="icon down big">Down</a></li>
+                        <li><a  class="icon left big">Left</a></li>
+                        <li><a  class="icon right big">Right</a></li>
+                        <li><a  class="icon tools big">Tools</a></li>
+                        <li><a  class="icon html5 big">HTML5</a></li>
+                        <li><a  class="icon css big">CSS</a></li>
+                        <li><a  class="icon js big">JS</a></li>
+                        <li><a  class="icon cloud big">Cloud</a></li>
+                        <li><a  class="icon tv big">TV</a></li>
+                        <li><a  class="icon wifi big">Wifi</a></li>
+                        <li><a  class="icon new big">New</a></li>
+                        <li><a  class="icon mic big">Mic</a></li>
+                        <li><a  class="icon database big">Database</a></li>
+                        <li><a  class="icon busy big">Busy</a></li>
+                        <li><a  class="icon bug big">Bug</a></li>
+                        <li><a  class="icon lamp big">Lamp</a></li>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+   
 
         <footer>
-            <a href="#tab1" class="icon home" onclick="$.afui.clearHistory()">Home</a>
-            <a href="#tab2" class="icon heart" onclick="$.afui.clearHistory()">Favorites</a>
-            <a href="#tab3" class="icon message" onclick="$.afui.clearHistory()">Messages <span class="af-badge">2</span></a> 
-            <a href="#tab4" class="icon user" onclick="$.afui.clearHistory()">Profile</a>
+            <a id='tabHome' href="#tab1"  class="icon home big" onclick="$.afui.clearHistory()"></a>
+            <a id='tabStream' href="#tab2" class="icon picture big" onclick="$.afui.clearHistory()"></a>
+            <a id='tabChat' href="#tab3" class="icon chat big" onclick="$.afui.clearHistory()"></a> 
+            <a id='tabContact' href="#tab4" class="icon user big" onclick="$.afui.clearHistory()"></a>
         </footer>
+
     </div>
 
 
