@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!--HTML5 doctype-->
+<html>
+
+<head>
+
+    <title>Login View Template</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="lib/appframework/icons.css" />
+    <link rel="stylesheet" type="text/css" href="lib/appframework/af.ui.css" />
+<script type="text/javascript" charset="utf-8" src="lib/jquerysession.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/jquery.min.js"></script>
+            <script type="text/javascript" charset="utf-8" src="lib/config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/fastclick.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/appframework/appframework.ui.min.js"></script>
+        
+    <script src='cordova.js'></script>
+
+
+
+</head>
+
+<body>
+
+    <div class="view splitview">
+        <header>
+            <a class="menuButton" data-left-menu="left" data-transition="cover" style="float:left"></a>
+            <h1>Title</h1>
+        </header>
+
+        <div class="pages">
+
+            <!--Tab View Pages-->
+            <div class="panel" data-title="Home" id="tab1" data-selected="true">
+                This is view for first Tab
+            </div>
+
+            <div class="panel" data-title="Favorites" id="tab2" >
+                This is view for second Tab
+            </div>
+
+            <div class="panel" data-title="Messages" id="tab3">
+                This is view for third Tab
+            </div>
+
+            <div class="panel" data-title="Profile" id="tab4">
+                This is view for fourth Tab
+            </div>
+             <!-- dari side menu-->
+            <div class="panel" id="1" data-title="menu 1" >
+                page menu 1
+            </div>
+            <div class="panel" id="2" data-title="menu 2">
+                This is Page menu 2
+            </div>
+
+        </div>
+                <nav id="left">
+            <div class="view active">
+                <header>
+                    <h1>Left</h1>
+                </header>
+                <div class="pages">
+                    <div class="panel active" id="navPage1" data-title="Foobar">
+                        <ul class="list">
+                            <li><a href="#1" onclick="$.afui.clearHistory()">satu</a></li>
+                            <li><a href="#2" onclick="$.afui.clearHistory()">dua</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <footer>
+            <a href="#tab1" class="icon home" onclick="$.afui.clearHistory()">Home</a>
+            <a href="#tab2" class="icon heart" onclick="$.afui.clearHistory()">Favorites</a>
+            <a href="#tab3" class="icon message" onclick="$.afui.clearHistory()">Messages <span class="af-badge">2</span></a> 
+            <a href="#tab4" class="icon user" onclick="$.afui.clearHistory()">Profile</a>
+        </footer>
+    </div>
+
+
+</body>
+
+
+</html>
