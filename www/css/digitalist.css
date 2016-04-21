@@ -1,0 +1,14 @@
+#afui p {
+    display:block;
+    margin:6px 0;
+
+    font-size:14px;
+    line-height:20px;
+    color:inherit
+}
+
+.small-right-em {
+	color: blue;
+	direction: rtl;
+	text-align: right;
+}
