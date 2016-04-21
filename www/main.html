@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Login View Template</title>
+    <title>Digitalist</title>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -12,6 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" type="text/css" href="lib/appframework/icons.css" />
     <link rel="stylesheet" type="text/css" href="lib/appframework/af.ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/digitalist.css" />
 <script type="text/javascript" charset="utf-8" src="lib/jquerysession.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/jquery.min.js"></script>
             <script type="text/javascript" charset="utf-8" src="lib/config.js"></script>
@@ -22,12 +23,12 @@
     <script src='cordova.js'></script>
 
 <script>
-        $(document).ready(function(){
-$.afui.updateBadge("#tabStream",'6','tr','green');
-$.afui.updateBadge("#tabChat",'303','tr','green');
-$.afui.updateBadge("#tabContact",'3','tr','green');
-//$.afui.toast("Hello World");
-        });
+$(document).ready(function(){
+		$.afui.updateBadge("#tabStream",'6','tr','green');
+		$.afui.updateBadge("#tabChat",'303','tr','green');
+		$.afui.updateBadge("#tabContact",'3','tr','green');
+		//$.afui.toast("Hello World");
+});
 
 </script>
 
@@ -39,7 +40,7 @@ $.afui.updateBadge("#tabContact",'3','tr','green');
         <header>
             <a class="menuButton" data-left-menu="left" data-transition="cover" style="float:left"></a>
             <h1>...</h1>
-			<a class='button icon settings' data-right-menu="right" data-transition="push" style="float:right">Right Menu</a>
+			<a class='menuButton' data-right-menu="right" data-transition="push" style="float:right"></a>
 
 
 
@@ -49,9 +50,22 @@ $.afui.updateBadge("#tabContact",'3','tr','green');
 
             <!--Tab View Pages-->
             <div class="panel" data-title="Home" id="tab1" data-selected="true">
-                    <ul class="list">
+                    <ul class="list inset">
                         
-                        <li id='aflink'  data-transition="none"><span class='icon target big'></span><h1>...</h1><p>App Framework</p></li>
+                        <li id='aflink'  data-transition="none">
+							<div class="grid">
+								<div class="col2"><span class='icon target big'>Pegasus</span></div>
+								<div class="col2 small-right-em" >12-10-2016</div>
+							</div>
+							
+							<p>App Framework Sungguh sangat mempermudah. sayangnya kurang dokumentasi</p>
+							<div class="button-grouped flex">
+								<a class="button">Like</a>
+								<a class="button">Comment</a>
+								<a class="button">Share</a>
+							</div>
+
+						</li>
                         <li id='afuilink' class='icon picture big' data-transition="none">App Framework UI</li>
                         <li id='pluginlink' class='icon key big' data-transition="none">App Framework Plugins</li>
                         <li id='devicelink' class='icon camera big' data-transition="none">Device APIs</li>
@@ -193,12 +207,12 @@ $.afui.updateBadge("#tabContact",'3','tr','green');
         </nav>
    
 
-        <footer>
-            <a id='tabHome' href="#tab1"  class="icon home big" onclick="$.afui.clearHistory()"></a>
-            <a id='tabStream' href="#tab2" class="icon picture big" onclick="$.afui.clearHistory()"></a>
-            <a id='tabChat' href="#tab3" class="icon chat big" onclick="$.afui.clearHistory()"></a> 
-            <a id='tabContact' href="#tab4" class="icon user big" onclick="$.afui.clearHistory()"></a>
-        </footer>
+<footer>
+	<a id='tabHome' href="#tab1"  class="icon home big" onclick="$.afui.clearHistory()"></a>
+	<a id='tabStream' href="#tab2" class="icon picture big" onclick="$.afui.clearHistory()"></a>
+	<a id='tabChat' href="#tab3" class="icon chat big" onclick="$.afui.clearHistory()"></a> 
+	<a id='tabContact' href="#tab4" class="icon user big" onclick="$.afui.clearHistory()"></a>
+</footer>
 
     </div>
 
