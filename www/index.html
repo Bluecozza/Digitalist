@@ -98,7 +98,8 @@
                 };
                 $.afui.toast(opts200);                    
     					localStorage.setItem('myuid',data.u_id);
-    					localStorage.setItem('mysername',data.u_username);
+    					localStorage.setItem('myusername',data.u_username);
+						localStorage.setItem('mypassword',$("#password").val());
     					localStorage.setItem('myname',data.u_name);
     					localStorage.setItem('myemail',data.u_email);
     					localStorage.setItem('mypicture',data.u_picture);
@@ -114,11 +115,13 @@
                     type:"success"
                 };
                 $.afui.toast(opts200);   
-    					$.session.set('username',data.u_username);
-    					$.session.set('uname',data.u_name);
-    					$.session.set('uemail',data.u_email);
-    					$.session.set('upicture',data.u_picture);
-    					$.session.set('ustatus','....');
+    					$.session.set('myuid',data.u_id);
+    					$.session.set('myusername',data.u_username);
+    					$.session.set('myusername',$("#password").val());
+    					$.session.set('myname',data.u_name);
+    					$.session.set('myemail',data.u_email);
+    					$.session.set('mypicture',data.u_picture);
+    					$.session.set('mystatus',data.u_status);
                         location.href = "main.html";
                 }
                 

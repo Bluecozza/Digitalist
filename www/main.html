@@ -15,7 +15,8 @@
     <link rel="stylesheet" type="text/css" href="css/digitalist.css" />
 <script type="text/javascript" charset="utf-8" src="lib/jquerysession.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/jquery.min.js"></script>
-            <script type="text/javascript" charset="utf-8" src="lib/config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/strophe.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/fastclick.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/appframework/appframework.ui.min.js"></script>
 	
@@ -24,19 +25,85 @@
 
 <script>
 $(document).ready(function(){
+ connection = new Strophe.Connection(BOSH_SERVICE);
+var myuid = localStorage.getItem('myuid');
+var myname = localStorage.getItem('myname');
+var myusername = localStorage.getItem('myusername');
+var mypassword = localStorage.getItem('mypassword');
+var myemail = localStorage.getItem('myemail');
+var mypicture = localStorage.getItem('mypicture');
+var mystatus = localStorage.getItem('mystatus');
+
+	    connection.connect(myusername + '@d-a.im', mypassword, onConnect);
+	
 		$.afui.updateBadge("#tabStream",'6','tr','green');
 		$.afui.updateBadge("#tabChat",'303','tr','green');
 		$.afui.updateBadge("#tabContact",'3','tr','green');
 		//$.afui.toast("Hello World");
 });
 
+function onConnect(status)
+{
+    if (status == Strophe.Status.CONNECTING) {
+	$.afui.toast('Connecting to chat server');
+	log('Connecting to chat server');
+    } else if (status == Strophe.Status.CONNFAIL) {
+	$.afui.toast('Failed to connect.');
+	$('#connect').get(0).value = 'connect';
+    } else if (status == Strophe.Status.DISCONNECTING) {
+	$.afui.toast('Disconnecting.');
+    } else if (status == Strophe.Status.DISCONNECTED) {
+	$.afui.toast('Disconnected.');
+	$('#connect').get(0).value = 'connect';
+    } else if (status == Strophe.Status.CONNECTED) {
+	$.afui.toast('Connected.');
+	//log('ECHOBOT: Send a message to ' + connection.jid +  ' to talk to me.');
+
+	connection.addHandler(onMessage, null, 'message', null, null,  null); 
+	connection.send($pres().tree());
+    }
+}
+function onMessage(msg) {
+    var to = msg.getAttribute('to');
+    var fr = msg.getAttribute('from');
+	var frm = fr.split("@", 2);
+    var from = titleCase(frm[0]);
+	
+	function titleCase(string) { 
+	return string.charAt(0).toUpperCase() + string.slice(1); 
+	} 
+	
+	
+    var type = msg.getAttribute('type');
+    var elems = msg.getElementsByTagName('body');
+
+    if (type == "chat" && elems.length > 0) {
+	var body = elems[0];
+
+	log(from + ': ' + 	    Strophe.getText(body));
+    
+	var reply = $msg({to: from, from: to, type: 'chat'})
+            .cnode(Strophe.copyElement(body));
+	connection.send(reply.tree());
+
+	log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
+    }
+
+    // we must return true to keep the handler alive.  
+    // returning false would remove it after it finishes.
+    return true;
+}
+function log(msg) 
+{
+    $('#chats').append('<div></div>').append(document.createTextNode(msg));
+}
 </script>
 
 </head>
 
 <body>
 
-    <div class="view splitview">
+    <div class="view splitview" >
         <header>
             <a class="menuButton" data-left-menu="left" data-transition="cover" style="float:left"></a>
             <h1>...</h1>
@@ -46,50 +113,250 @@ $(document).ready(function(){
 
         </header>
 
-        <div class="pages">
+        <div class="pages" style="background: url(images/bg.jpg); background-size: 100%;">
 
             <!--Tab View Pages-->
             <div class="panel" data-title="Home" id="tab1" data-selected="true">
-                    <ul class="list inset">
-                        
-                        <li id='aflink'  data-transition="none">
-							<div class="grid flex">
-								<div class="col2"><span class='icon target big'>Pegasus</span></div>
-								<div class="col2 small-right-em" >12-10-2016</div>
+                <ul id='stream-list' class="list">
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
 							</div>
-							
-							<p>App Framework Sungguh sangat mempermudah. sayangnya kurang dokumentasi</p>
-							<div class="flex">
-								<a class='button icon heart'>5</a>
-								<a class="button icon message">4</a>
-								<a class="button icon heart">Share</a>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
 							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
+                    <li id='stream-item'  data-transition="none">
+						<div id='stream-header'class="row">
+							<div id='stream-user' class="set-8 menu">
+								<span class='icon target big'>Pegasus</span>
+							</div>
+							<div id='stream-date'class="set-4 small-right-em">
+								12-02-2016
+							</div>
+						</div>    
+						<div id='stream-content' class="row">
+							<div class="set-12 small-left-em">
+							<p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+							<p>....</p>
+							</div>
+						</div>    
+						<div id='stream-attachment' class="row">
+							<div class="set-1">
+							</div>
+							<div id='stream-attachment-item' class="set-11">
+								<!-- belum ada isinya. dinamically retrieved from database/json rest-->
+							</div>
+						</div>    
+					</li>
 
-						</li>
-                        <li id='afuilink' class='icon picture big' data-transition="none">App Framework UI</li>
-                        <li id='pluginlink' class='icon key big' data-transition="none">App Framework Plugins</li>
-                        <li id='devicelink' class='icon camera big' data-transition="none">Device APIs</li>
-                        
-                        <li class="theme theme-none" href="index.html" data-ignore="true">Auto detect theme</li>
-                        <li class="theme theme-default" href="index.html?default" data-ignore="true">Default theme</li>
-                        <li class="theme theme-ios" href="index.html?ios" data-ignore="true">iOS theme (iOS6 and previous)</li>
-                        <li class="theme theme-ios7" href="index.html?ios7" data-ignore="true">iOS 7 theme</li>
-                        <li class="theme theme-android" href="index.html?android" data-ignore="true">Android dark theme</li>
-                        <li class="theme theme-android-light" href="index.html?android-light" data-ignore="true">Android light theme</li>
-                        <li class="theme theme-win8" href="index.html?win8" data-ignore="true">Windows Phone 8 dark theme</li>
-                        <li class="theme theme-win8-light" href="index.html?win8-light" data-ignore="true">Windows Phone 8 light theme</li>
-                        <li class="theme theme-bb" href="index.html?bb" data-ignore="true">BlackBerry 10 theme</li>                         
-                    </ul>
+				</ul>
             </div>
 
             <div class="panel" data-title="Favorites" id="tab2" >
-                This is view for second Tab
+              
+					<div id='chats'>
+					</div>
+					<div class='txtchat'>
+						<input type="text" id='txtchat' placeholder="Write.." /><a href='#' id='btnSend'><span class='icon right big'>send</span></a>
+					</div>
+              
             </div>
-
-            <div class="panel" data-title="Messages" id="tab3">
-                This is view for third Tab
+			<!-- start chat-->
+            <div class="panel" data-title="Chat" id="tab3">
+                <div id='chatwindow' width='100%' height='100%'>
+					<div id='chatlist'>
+					<ul class="list inset">
+                        <li id='afuilink' class='icon picture big' data-transition="none">App Framework UI</li>
+                        <li id='pluginlink' class='icon key big' data-transition="none">App Framework Plugins</li>
+                        <li id='devicelink' class='icon camera big' data-transition="none">Device APIs</li>
+      
+                        <li class="theme theme-win8-light" href="index.html?win8-light" data-ignore="true">Windows Phone 8 light theme</li>
+                        <li class="mychat" >HHahaha bujur banarrr</li>                         
+                    </ul>
+					</div>
+					<div class='txtchat'>
+						<input type="text" placeholder="Write..">
+					</div>
+                </div>
             </div>
-
+			<!-- Chat Window-->
             <div class="panel" data-title="Profile" id="tab4">
                 This is view for fourth Tab
             </div>
