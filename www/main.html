@@ -13,10 +13,13 @@
     <link rel="stylesheet" type="text/css" href="lib/appframework/icons.css" />
     <link rel="stylesheet" type="text/css" href="lib/appframework/af.ui.css" />
     <link rel="stylesheet" type="text/css" href="css/digitalist.css" />
+	<script type="text/javascript" charset="utf-8" src="lib/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="lib/jquerysession.js"></script>
-    <script type="text/javascript" charset="utf-8" src="lib/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="lib/querystring.js"></script>
+   
     <script type="text/javascript" charset="utf-8" src="lib/config.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/strophe.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/strophe.roster.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/fastclick.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/appframework/appframework.ui.min.js"></script>
 	
@@ -33,7 +36,6 @@ var mypassword = localStorage.getItem('mypassword');
 var myemail = localStorage.getItem('myemail');
 var mypicture = localStorage.getItem('mypicture');
 var mystatus = localStorage.getItem('mystatus');
-
 	    connection.connect(myusername + '@d-a.im', mypassword, onConnect);
 	
 		$.afui.updateBadge("#tabStream",'6','tr','green');
@@ -41,12 +43,25 @@ var mystatus = localStorage.getItem('mystatus');
 		$.afui.updateBadge("#tabContact",'3','tr','green');
 		//$.afui.toast("Hello World");
 });
+//-----------------------------------------
 
+function onGetRoster(items) {
+    if (!items || items.length == 0)
+        return;
+  
+
+for (i = 0; i < items.length; i++) {
+    clist(items[i].jid, items[i].name);
+}
+
+    
+}
+//----------------------------------------
 function onConnect(status)
 {
     if (status == Strophe.Status.CONNECTING) {
 	$.afui.toast('Connecting to chat server');
-	log('Connecting to chat server');
+	//log(querystring.parse().nama);//ambil value misal #chat.html?nama=daim
     } else if (status == Strophe.Status.CONNFAIL) {
 	$.afui.toast('Failed to connect.');
 	$('#connect').get(0).value = 'connect';
@@ -57,10 +72,10 @@ function onConnect(status)
 	$('#connect').get(0).value = 'connect';
     } else if (status == Strophe.Status.CONNECTED) {
 	$.afui.toast('Connected.');
-	//log('ECHOBOT: Send a message to ' + connection.jid +  ' to talk to me.');
-
+	log('just connected');
 	connection.addHandler(onMessage, null, 'message', null, null,  null); 
 	connection.send($pres().tree());
+	connection.roster.get(onGetRoster, 0);
     }
 }
 function onMessage(msg) {
@@ -76,27 +91,60 @@ function onMessage(msg) {
 	
     var type = msg.getAttribute('type');
     var elems = msg.getElementsByTagName('body');
-
     if (type == "chat" && elems.length > 0) {
 	var body = elems[0];
-
 	log(from + ': ' + 	    Strophe.getText(body));
     
 	var reply = $msg({to: from, from: to, type: 'chat'})
             .cnode(Strophe.copyElement(body));
 	connection.send(reply.tree());
-
 	log('ECHOBOT: I sent ' + from + ': ' + Strophe.getText(body));
     }
-
     // we must return true to keep the handler alive.  
     // returning false would remove it after it finishes.
     return true;
 }
 function log(msg) 
 {
-    $('#chats').append('<div></div>').append(document.createTextNode(msg));
+	var li = '<li>' + msg + '</li>';
+    $('#chats').append(li);
+	// scrolling the list to bottom so that new message will be visible
+	$('#chats').scrollTop(999999999);
 }
+function clist(cid, cname) 
+{
+// <li><a class="theme theme-none" href="index.html" data-ignore="true">Auto detect theme</a></li>
+// <a id='tabHome' href="#tab1"  class="icon home big" onclick="$.afui.clearHistory()"></a>
+	var asx= "'" + cid + "'";
+	var li = '<li id="contact_item" onclick="openChatTab(' + asx+ ')">'+ cid +'</li>';
+    $('#contact_list').append(li);
+	
+}
+function openChatTab(a) {
+//<a id='tabStream' href="#tab2" class="icon picture big" onclick="$.afui.clearHistory()"></a>
+    var frx = a;
+	var fry = frx.split("@", 2);
+    var frz = fry[0];
+        $("footer").append("<a href='#tab" + frz + "' class='icon user big' onclick='$.afui.clearHistory()'></a>" );
+$("div.pages").append(
+            '<div class="panel" data-title="Chat with ' + frz + '" id="tab' + frz + '" ><div id="chatlist' + frz + '"></div></div>'
+        );
+        $("div.pages").tabs("refresh");
+   
+}
+function send() {
+	var message = $('#input_message').val();
+	if (message.trim().length > 0) {
+		sendMessageToServer('message', message);
+		log("me: "+message);
+	} else {
+		alert('Please enter message to send!');
+	}
+}
+/////////////////////////////
+
+/////////////////////////////
+
 </script>
 
 </head>
@@ -328,20 +376,9 @@ function log(msg)
 
 				</ul>
             </div>
-
-            <div class="panel" data-title="Favorites" id="tab2" >
-              
-					<div id='chats'>
-					</div>
-					<div class='txtchat'>
-						<input type="text" id='txtchat' placeholder="Write.." /><a href='#' id='btnSend'><span class='icon right big'>send</span></a>
-					</div>
-              
-            </div>
-			<!-- start chat-->
-            <div class="panel" data-title="Chat" id="tab3">
-                <div id='chatwindow' width='100%' height='100%'>
-					<div id='chatlist'>
+<!-- start 
+            <div class="panel" data-title="Contact" id="tab2" >
+				<div id='chatlist'>
 					<ul class="list inset">
                         <li id='afuilink' class='icon picture big' data-transition="none">App Framework UI</li>
                         <li id='pluginlink' class='icon key big' data-transition="none">App Framework Plugins</li>
@@ -350,11 +387,27 @@ function log(msg)
                         <li class="theme theme-win8-light" href="index.html?win8-light" data-ignore="true">Windows Phone 8 light theme</li>
                         <li class="mychat" >HHahaha bujur banarrr</li>                         
                     </ul>
-					</div>
-					<div class='txtchat'>
-						<input type="text" placeholder="Write..">
-					</div>
-                </div>
+				</div>
+            </div> chat-->
+            <div class="panel" data-title="Contact" id="tab2" >
+				<div id='chatlist'>
+					
+				</div>
+            </div>
+			<!-- start chat-->
+            <div class="panel" data-title="Chat" id="tab3">
+				<ul id="chats">
+				</ul>
+				<div id='stream-header'class="row">
+					<form id="form_send_message" method="post" action="#">
+						<div id='stream-user' class="set-10 menu">
+							<input type="text" id="input_message" placeholder="Type your message here..." />
+						</div>
+						<div id='stream-date' class="set-2 ">
+							<input type="submit" id="btn_send" onclick="send();" value="Send" />
+						</div>
+					</form>
+				</div>  
             </div>
 			<!-- Chat Window-->
             <div class="panel" data-title="Profile" id="tab4">
@@ -404,70 +457,13 @@ function log(msg)
         <nav id="right">
             <div class="view active">
                 <header>
-                    <h1>Setting</h1>
+                    <h1>Friend</h1>
                 </header>
                 <div class="pages">
                     <div class="panel active" id="navPage1" data-title="Foobar">
-                        <ul class="list">
-                        <li class="divider">Icons</li> 
-                        <li><a  class="icon home big">Home</a></li>
-                        <li><a  class="icon pencil big">Pencil</a></li>
-                        <li><a  class="icon picture big">Picture</a></li>
-                        <li><a  class="icon camera big">Camera</a></li>
-                        <li><a  class="icon headset big">Headset</a></li>
-                        <li><a  class="icon paper big">Paper</a></li>
-                        <li><a  class="icon stack big">Stack</a></li>
-                        <li><a  class="icon folder big">Folder</a></li>
-                        <li><a  class="icon tag big">Tag</a></li>
-                        <li><a  class="icon basket big">Basket</a></li>
-                        <li><a  class="icon phone big">Phone</a></li>
-                        <li><a  class="icon mail big">Mail</a></li>
-                        <li><a  class="icon location big">Location</a></li>
-                        <li><a  class="icon clock big">Clock</a></li>
-                        <li><a  class="icon calendar big">Calendar</a></li>
-                        <li><a  class="icon message big">Message</a></li>
-                        <li><a  class="icon chat big">Chat</a></li>
-                        <li><a  class="icon user big">User</a></li>
-                        <li><a  class="icon loading big">Loading</a></li>
-                        <li><a  class="icon refresh big">Refresh</a></li>
-                        <li><a  class="icon magnifier big">Magnifier</a></li>
-                        <li><a  class="icon key big">Key</a></li>
-                        <li><a  class="icon settings big">Settings</a></li>
-                        <li><a  class="icon graph big">Graph</a></li>
-                        <li><a  class="icon trash big">Trash</a></li>
-                        <li><a  class="icon pin big">Pin</a></li>
-                        <li><a  class="icon target big">Target</a></li>
-                        <li><a  class="icon download big">Download</a></li>
-                        <li><a  class="icon upload big">Upload</a></li>
-                        <li><a  class="icon star big">Star</a></li>
-                        <li><a  class="icon heart big">Heart</a></li>
-                        <li><a  class="icon warning big">Warning</a></li>
-                        <li><a  class="icon add big">Add</a></li>
-                        <li><a  class="icon remove big">Remove</a></li>
-                        <li><a  class="icon question big">Question</a></li>
-                        <li><a  class="icon info big">Info</a></li>
-                        <li><a  class="icon error big">Error</a></li>
-                        <li><a  class="icon check big">Check</a></li>
-                        <li><a  class="icon minimize big">Minimize</a></li>
-                        <li><a  class="icon close big">Close</a></li>
-                        <li><a  class="icon up big">Up</a></li>
-                        <li><a  class="icon down big">Down</a></li>
-                        <li><a  class="icon left big">Left</a></li>
-                        <li><a  class="icon right big">Right</a></li>
-                        <li><a  class="icon tools big">Tools</a></li>
-                        <li><a  class="icon html5 big">HTML5</a></li>
-                        <li><a  class="icon css big">CSS</a></li>
-                        <li><a  class="icon js big">JS</a></li>
-                        <li><a  class="icon cloud big">Cloud</a></li>
-                        <li><a  class="icon tv big">TV</a></li>
-                        <li><a  class="icon wifi big">Wifi</a></li>
-                        <li><a  class="icon new big">New</a></li>
-                        <li><a  class="icon mic big">Mic</a></li>
-                        <li><a  class="icon database big">Database</a></li>
-                        <li><a  class="icon busy big">Busy</a></li>
-                        <li><a  class="icon bug big">Bug</a></li>
-                        <li><a  class="icon lamp big">Lamp</a></li>
-                    </ul>
+                        <ul id='contact_list' class="list">
+							<li><a  class="icon busy big">Busy</a></li>
+						</ul>
                     </div>
                 </div>
             </div>
