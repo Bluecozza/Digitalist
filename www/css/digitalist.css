@@ -35,6 +35,33 @@
 	font-style: oblique;
 }
 
+#chats {
+	margin: 0;
+	padding: 0;
+	height: 90%;
+	overflow:hidden;
+	overflow-x: hidden;
+	
+}
+#chats li {
+	list-style: none;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	padding: 10px 20px;
+}
+
+#chats li.new,#chats li.exit {
+	font-style: italic;
+	color: #bbbbbb;
+}
+
+#chats li span.name {
+	color: #8aaf0d;
+}
+
+#chats li span.red {
+	color: #e94e59;
+}
 #chatwindow {
 	font-size: 80%;
 }

@@ -13,8 +13,9 @@
     <link rel="stylesheet" type="text/css" href="lib/appframework/icons.css" />
     <link rel="stylesheet" type="text/css" href="lib/appframework/af.ui.css" />
     <link rel="stylesheet" type="text/css" href="css/digitalist.css" />
+	<script type="text/javascript" charset="utf-8" src="lib/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="lib/jquerysession.js"></script>
-    <script type="text/javascript" charset="utf-8" src="lib/jquery.min.js"></script>
+    
     <script type="text/javascript" charset="utf-8" src="lib/config.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/strophe.js"></script>
     <script type="text/javascript" charset="utf-8" src="lib/fastclick.min.js"></script>
@@ -82,6 +83,7 @@ function onMessage(msg) {
 
 	log(from + ': ' + 	    Strophe.getText(body));
     
+
 	var reply = $msg({to: from, from: to, type: 'chat'})
             .cnode(Strophe.copyElement(body));
 	connection.send(reply.tree());
@@ -95,7 +97,22 @@ function onMessage(msg) {
 }
 function log(msg) 
 {
-    $('#chats').append('<div></div>').append(document.createTextNode(msg));
+	var li = '<li>' + msg + '</li>';
+    $('#chats').append(li);
+
+	// scrolling the list to bottom so that new message will be visible
+	$('#chats').scrollTop(999999999);
+}
+
+function send() {
+	var message = $('#input_message').val();
+
+	if (message.trim().length > 0) {
+		sendMessageToServer('message', message);
+	} else {
+		alert('Please enter message to send!');
+	}
+
 }
 </script>
 
@@ -331,12 +348,18 @@ function log(msg)
 
             <div class="panel" data-title="Favorites" id="tab2" >
               
-					<div id='chats'>
-					</div>
-					<div class='txtchat'>
-						<input type="text" id='txtchat' placeholder="Write.." /><a href='#' id='btnSend'><span class='icon right big'>send</span></a>
-					</div>
-              
+				<ul id="chats">
+				</ul>
+				<div id='stream-header'class="row">
+					<form id="form_send_message" method="post" action="#">
+						<div id='stream-user' class="set-10 menu">
+							<input type="text" id="input_message" placeholder="Type your message here..." />
+						</div>
+						<div id='stream-date' class="set-2 ">
+							<input type="submit" id="btn_send" onclick="send();" value="Send" />
+						</div>
+					</form>
+				</div>  
             </div>
 			<!-- start chat-->
             <div class="panel" data-title="Chat" id="tab3">
